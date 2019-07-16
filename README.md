@@ -6,6 +6,18 @@ It uses a routing package [fasthttp-routing](https://github.com/qiangxue/fasthtt
 
 Inspired from https://github.com/irahardianto/service-pattern-go
 
+## Prerequisites
+
+
+#### Start Mongodb
+
+```shell
+# Once, create the mongo container
+docker run --name mongo -p 27017:27017 -d mongo:4
+# Start it
+docker start mongo
+```
+
 ## Setup
 Install the needed dependencies
 
@@ -28,10 +40,3 @@ Run:
 ```
 
 The API will be available here : http://localhost:8080/category/:code
-
-## Docker
-
-```sh
-docker build -t go-mongodb-clean-architecture .
-docker run -p 8080:8080 go-mongodb-clean-architecture
-```
