@@ -3,38 +3,25 @@ package repositories
 import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 	"main.go/infrastructures/mongodb"
 	"main.go/models"
 )
 
 type CategoryRepository struct {
-	*mongo.Collection
+	*mongo.Client
 }
 
-func (collection CategoryRepository) GetCategoryRepository(code string) (models.CategoryModel, error) {
-	log.Print("collection.Name: ", collection.Name())
+func (client CategoryRepository) GetCategoryRepository(code string) (models.CategoryModel, error) {
+	categoriesCollection := client.Database("opus-category").Collection("categories")
 
 	filter := bson.M{"code": code}
 
 	var category models.CategoryModel
-	err := collection.FindOne(mongodb.GetQueryContext(), filter).Decode(&category)
-
-	log.Print("Category: ", category)
+	err := categoriesCollection.FindOne(mongodb.GetQueryContext(), filter).Decode(&category)
 
 	return category, err
 }
 
-//
-//type PopulationRules struct {
-//	ModelCodes []string `bson:"modelCodes,omitempty"`
-//}
-//
-//type Category struct {
-//	Code            string            `bson:"code,omitempty"`
-//	CategoryType    string            `bson:"categoryType,omitempty"`
-//	PopulationRules []PopulationRules `bson:"populationRules,omitempty"`
-//}
 //
 //func getCategoryProducts(collection *mongo.Collection, category models.CategoryModel) {
 //	var pipeline interface{}

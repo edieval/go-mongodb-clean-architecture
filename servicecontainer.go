@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"log"
 	"main.go/controllers"
 	"main.go/infrastructures/mongodb"
 	"main.go/repositories"
@@ -20,18 +18,10 @@ func (k *kernel) InjectCategoriesController() controllers.CategoriesController {
 
 	mongodbClient := mongodb.GetMongoClient()
 
-	err := mongodbClient.Ping(context.TODO(), nil)
+	categoriesRepository := &repositories.CategoryRepository{mongodbClient}
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Print("Connected to MongoDB!")
-
-	categoriesCollection := mongodbClient.Database("opus-category").Collection("categories")
-
-	categoriesRepository := &repositories.CategoryRepository{categoriesCollection}
 	categoriesService := &services.CategoriesService{categoriesRepository}
+
 	playerController := controllers.CategoriesController{categoriesService}
 
 	return playerController
