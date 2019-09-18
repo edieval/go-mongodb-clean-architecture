@@ -6,10 +6,9 @@ import (
 )
 
 type CategoriesService struct {
-	interfaces.ICategoriesRepository
+	interfaces.ICategoryRepository
 }
 
 func (service *CategoriesService) GetCategoryService(code string) (models.CategoryModel, error) {
-	category, err := service.GetCategoryRepository(code)
-	return category, err
+	return service.GetCategoryRepository(code)
 }

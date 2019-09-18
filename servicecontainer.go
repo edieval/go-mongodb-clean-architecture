@@ -18,11 +18,13 @@ func (k *kernel) InjectCategoriesController() controllers.CategoriesController {
 
 	mongodbClient := mongodb.GetMongoClient()
 
-	categoriesRepository := &repositories.CategoryRepository{mongodbClient}
+	categoryRepository := &repositories.CategoryRepository{mongodbClient}
+	productsRepository := &repositories.ProductsRepository{mongodbClient}
 
-	categoriesService := &services.CategoriesService{categoriesRepository}
+	categoriesService := &services.CategoriesService{categoryRepository}
+	productsService := &services.ProductsService{productsRepository}
 
-	playerController := controllers.CategoriesController{categoriesService}
+	playerController := controllers.CategoriesController{categoriesService, productsService}
 
 	return playerController
 }

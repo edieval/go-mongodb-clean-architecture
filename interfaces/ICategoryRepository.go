@@ -2,6 +2,6 @@ package interfaces
 
 import "main.go/models"
 
-type ICategoriesRepository interface {
+type ICategoryRepository interface {
 	GetCategoryRepository(code string) (models.CategoryModel, error)
 }
