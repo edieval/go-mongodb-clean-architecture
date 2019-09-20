@@ -1,0 +1,13 @@
+runtime: go112
+
+service: go-opus-category-api
+
+automatic_scaling:
+  min_instances: 5
+  max_instances: 100
+
+instance_class: F4_1G
+
+handlers:
+  - url: /.*
+    script: auto
