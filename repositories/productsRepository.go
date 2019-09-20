@@ -13,7 +13,7 @@ type ProductsRepository struct {
 	*mongo.Client
 }
 
-func (client ProductsRepository) GetProductsRepository(category models.CategoryModel, contextStore string) bson.D {
+func (client ProductsRepository) GetProductsRepository(category models.CategoryModel, contextStore string) map[string]interface{} {
 	productsCollection := client.Database("opus-category").Collection("products")
 
 	var query []interface{}
@@ -25,21 +25,23 @@ func (client ProductsRepository) GetProductsRepository(category models.CategoryM
 		buildFacet(category.Filters),
 	)
 
-	jsonToString(query)
-
 	cursor, _ := productsCollection.Aggregate(mongodb.GetQueryContext(), query)
 
-	var result bson.D
+	var result map[string]interface{} //bson.D
 
-	for cursor.Next(mongodb.GetQueryContext()) {
-		elem := &bson.D{}
-		if err := cursor.Decode(elem); err != nil {
-			log.Fatal(err)
-		}
-		result = *elem
+	cursor.Next(mongodb.GetQueryContext())
+	err := cursor.Decode(&result)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	return result
+	var temporaryBytes, _ = bson.MarshalExtJSON(result, true, true)
+
+	var jsonDocument map[string]interface{}
+
+	err = json.Unmarshal(temporaryBytes, &jsonDocument)
+
+	return jsonDocument
 }
 
 func addContextualized(context string) interface{} {
@@ -232,16 +234,6 @@ func buildAttributesRules(attributeRules []models.AttributeRule) map[string]inte
 		result = concatJson(result, attrib)
 	}
 	return result
-}
-
-func jsonToString(titi interface{}) string {
-	out, err := json.Marshal(titi)
-	if err != nil {
-		panic(err)
-	}
-
-	log.Print(string(out))
-	return string(out)
 }
 
 func convertOperator(operator string) string {

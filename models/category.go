@@ -17,6 +17,9 @@ type standardFilterFields struct {
 	NumberValuesToDisplay int    `bson:"numberValuesToDisplay,omitempty" json:"numberValuesToDisplay,omitempty"`
 }
 
+type toggleFilterFields struct {
+}
+
 type Filter struct {
 	Code                 string               `bson:"code,omitempty"`
 	Label                string               `bson:"label,omitempty"`
@@ -24,12 +27,20 @@ type Filter struct {
 	Description          string               `bson:"description,omitempty"`
 	Path                 string               `bson:"path,omitempty"`
 	StandardFilterFields standardFilterFields `bson:"standardFilterFields,omitempty" json:"standardFilterFields,omitempty"`
-	isExtended           bool
+	ToggleFilterFields   toggleFilterFields   `bson:"toggleFilterFields,omitempty" json:"toggleFilterFields,omitempty"`
+	IsExtended           bool
+}
+
+type Publication struct {
+	Status string `bson:"status,omitempty"`
 }
 
 type CategoryModel struct {
 	Code            string            `bson:"code,omitempty"`
 	CategoryType    string            `bson:"categoryType,omitempty"`
+	Label           string            `bson:"label,omitempty"`
+	Description     string            `bson:"description,omitempty"`
+	Publication     Publication       `bson:"publication,omitempty"`
 	PopulationRules []PopulationRules `bson:"populationRules,omitempty"`
 	Filters         []Filter          `bson:"filters,omitempty"`
 }
